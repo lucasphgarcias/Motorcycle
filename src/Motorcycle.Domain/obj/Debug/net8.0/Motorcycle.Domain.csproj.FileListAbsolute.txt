@@ -1,0 +1,11 @@
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\bin\Debug\net8.0\Motorcycle.Domain.deps.json
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\bin\Debug\net8.0\Motorcycle.Domain.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\bin\Debug\net8.0\Motorcycle.Domain.pdb
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\Motorcycle.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\Motorcycle.Domain.AssemblyInfoInputs.cache
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\Motorcycle.Domain.AssemblyInfo.cs
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\Motorcycle.Domain.csproj.CoreCompileInputs.cache
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\Motorcycle.Domain.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\refint\Motorcycle.Domain.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\Motorcycle.Domain.pdb
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Domain\obj\Debug\net8.0\ref\Motorcycle.Domain.dll

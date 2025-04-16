@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    networks:
+      - motorcycle-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=MotocycleDb;Username=MotocycleDb;Password=MotocycleDb
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      - MinIO__Endpoint=minio:9000
+      - MinIO__AccessKey=minio_access_key
+      - MinIO__SecretKey=minio_secret_key
+      - MinIO__BucketName=cnhdocuments
+      - MinIO__UseSSL=false
+      - ASPNETCORE_URLS=http://+:80
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=MotocycleDb
+      - POSTGRES_PASSWORD=MotocycleDb
+      - POSTGRES_DB=MotocycleDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - motorcycle-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U MotocycleDb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: motorcycle@motorcycle.com
+      PGADMIN_DEFAULT_PASSWORD: motorcycle@2025#
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_DISABLE_POSTFIX: 'True'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - motorcycle-network
+    depends_on:
+      - postgres
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - motorcycle-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minio_access_key
+      - MINIO_ROOT_PASSWORD=minio_secret_key
+    volumes:
+      - minio-data:/data
+    networks:
+      - motorcycle-network
+
+networks:
+  motorcycle-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  minio-data:
+  pgadmin-data:

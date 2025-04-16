@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Motorcycle.API</name>
+    </assembly>
+    <members>
+        <member name="M:Motorcycle.API.Controllers.DeliveryPersonsController.GetAll">
+            <summary>
+            Obtém todos os entregadores cadastrados
+            </summary>
+            <returns>Lista de entregadores</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.DeliveryPersonsController.GetById(System.Guid)">
+            <summary>
+            Obtém um entregador pelo ID
+            </summary>
+            <param name="id">ID do entregador</param>
+            <returns>Dados do entregador</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.DeliveryPersonsController.Create(Motorcycle.Application.DTOs.DeliveryPerson.CreateDeliveryPersonDto)">
+            <summary>
+            Cadastra um novo entregador
+            </summary>
+            <param name="createDto">Dados do entregador</param>
+            <returns>Entregador cadastrado</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.DeliveryPersonsController.UpdateLicenseImage(System.Guid,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Atualiza a imagem da CNH de um entregador
+            </summary>
+            <param name="id">ID do entregador</param>
+            <param name="file">Arquivo de imagem (PNG ou BMP)</param>
+            <returns>Entregador atualizado</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.DeliveryPersonsController.GetByCnpj(System.String)">
+            <summary>
+            Busca um entregador pelo CNPJ
+            </summary>
+            <param name="cnpj">CNPJ do entregador</param>
+            <returns>Dados do entregador</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.DeliveryPersonsController.GetByLicenseNumber(System.String)">
+            <summary>
+            Busca um entregador pelo número da CNH
+            </summary>
+            <param name="licenseNumber">Número da CNH</param>
+            <returns>Dados do entregador</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.MotorcyclesController.GetAll(System.String)">
+            <summary>
+            Obtém todas as motos cadastradas
+            </summary>
+            <param name="licensePlate">Placa para filtrar (opcional)</param>
+            <returns>Lista de motos</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.MotorcyclesController.GetById(System.Guid)">
+            <summary>
+            Obtém uma moto pelo ID
+            </summary>
+            <param name="id">ID da moto</param>
+            <returns>Dados da moto</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.MotorcyclesController.Create(Motorcycle.Application.DTOs.Motorcycle.CreateMotorcycleDto)">
+            <summary>
+            Cadastra uma nova moto
+            </summary>
+            <param name="createDto">Dados da moto</param>
+            <returns>Moto cadastrada</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.MotorcyclesController.UpdateLicensePlate(System.Guid,Motorcycle.Application.DTOs.Motorcycle.UpdateMotorcycleLicensePlateDto)">
+            <summary>
+            Atualiza a placa de uma moto
+            </summary>
+            <param name="id">ID da moto</param>
+            <param name="updateDto">Nova placa</param>
+            <returns>Moto atualizada</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.MotorcyclesController.Delete(System.Guid)">
+            <summary>
+            Remove uma moto
+            </summary>
+            <param name="id">ID da moto</param>
+            <returns>Confirmação de remoção</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.GetAll">
+            <summary>
+            Obtém todos os aluguéis cadastrados
+            </summary>
+            <returns>Lista de aluguéis</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.GetById(System.Guid)">
+            <summary>
+            Obtém um aluguel pelo ID
+            </summary>
+            <param name="id">ID do aluguel</param>
+            <returns>Dados do aluguel</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.Create(Motorcycle.Application.DTOs.Rental.CreateRentalDto)">
+            <summary>
+            Cadastra um novo aluguel
+            </summary>
+            <param name="createDto">Dados do aluguel</param>
+            <returns>Aluguel cadastrado</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.ReturnMotorcycle(System.Guid,Motorcycle.Application.DTOs.Rental.ReturnMotorcycleDto)">
+            <summary>
+            Registra a devolução de uma moto
+            </summary>
+            <param name="id">ID do aluguel</param>
+            <param name="returnDto">Data de devolução</param>
+            <returns>Detalhes do valor total</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.CalculateTotalAmount(System.Guid,System.DateOnly)">
+            <summary>
+            Calcula o valor total do aluguel para uma data de devolução específica
+            </summary>
+            <param name="id">ID do aluguel</param>
+            <param name="returnDate">Data de devolução</param>
+            <returns>Detalhes do valor total</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.GetByMotorcycleId(System.Guid)">
+            <summary>
+            Obtém os aluguéis de uma moto específica
+            </summary>
+            <param name="motorcycleId">ID da moto</param>
+            <returns>Lista de aluguéis</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.GetByDeliveryPersonId(System.Guid)">
+            <summary>
+            Obtém os aluguéis de um entregador específico
+            </summary>
+            <param name="deliveryPersonId">ID do entregador</param>
+            <returns>Lista de aluguéis</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.RentalsController.GetActiveByDeliveryPersonId(System.Guid)">
+            <summary>
+            Obtém o aluguel ativo de um entregador
+            </summary>
+            <param name="deliveryPersonId">ID do entregador</param>
+            <returns>Aluguel ativo</returns>
+        </member>
+    </members>
+</doc>
