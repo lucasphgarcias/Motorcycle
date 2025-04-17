@@ -6,6 +6,8 @@ using Motorcycle.Domain.Events;
 using Motorcycle.Domain.Interfaces.Services;
 using Motorcycle.Infrastructure.Messaging.Configuration;
 using RabbitMQ.Client;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Motorcycle.Infrastructure.Messaging.Publishers;
 
@@ -53,6 +55,42 @@ public class RabbitMqEventPublisher : IEventPublisher, IDisposable
         }
     }
 
+    // public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default) where T : IDomainEvent
+    // {
+    //     if (_disposed)
+    //         throw new ObjectDisposedException(nameof(RabbitMqEventPublisher));
+
+    //     try
+    //     {
+    //         // Executar a publicação em uma Task para ser assíncrono
+    //         await Task.Run(() =>
+    //         {
+    //             // Determinar a routing key com base no tipo do evento
+    //             var routingKey = GetRoutingKey(@event);
+    //                 _logger.LogInformation("Publicando evento: {EventType} com routing key: {RoutingKey}, conteúdo: {@Event}", 
+    //                     typeof(T).Name, routingKey, @event);
+
+    //             // Serializar o evento
+    //             var message = JsonSerializer.Serialize(@event);
+    //             var body = Encoding.UTF8.GetBytes(message);
+
+    //             // Publicar a mensagem
+    //             _channel.BasicPublish(
+    //                 exchange: _exchangeName,
+    //                 routingKey: routingKey,
+    //                 basicProperties: null,
+    //                 body: body);
+
+    //             _logger.LogInformation("Evento publicado: {EventType}, ID: {EventId}", @event.GetType().Name, @event.Id);
+    //         }, cancellationToken);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         _logger.LogError(ex, "Erro ao publicar evento {EventType}", typeof(T).Name);
+    //         throw;
+    //     }
+    // }
+
     public async Task PublishAsync<T>(T @event, CancellationToken cancellationToken = default) where T : IDomainEvent
     {
         if (_disposed)
@@ -66,8 +104,38 @@ public class RabbitMqEventPublisher : IEventPublisher, IDisposable
                 // Determinar a routing key com base no tipo do evento
                 var routingKey = GetRoutingKey(@event);
 
-                // Serializar o evento
-                var message = JsonSerializer.Serialize(@event);
+                // Usar opções específicas para serialização
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false,
+                    //DefaultIgnoreCondition = JsonIgnoreCondition.Never // Não ignorar valores default
+                };
+
+                // Adicionar o tipo para facilitar a desserialização
+                // (use este ou outro método para garantir que o tipo seja incluído)
+                var eventWithType = new Dictionary<string, object>
+                {
+                    ["$type"] = @event.GetType().Name,
+                    ["Id"] = @event.Id,
+                    ["OccurredOn"] = @event.OccurredOn
+                };
+                
+                // Adicionar todas as outras propriedades do evento usando reflexão
+                foreach (var prop in @event.GetType().GetProperties())
+                {
+                    if (prop.Name != "Id" && prop.Name != "OccurredOn")
+                    {
+                        eventWithType[prop.Name] = prop.GetValue(@event);
+                    }
+                }
+
+                // Serializar o dicionário com as opções configuradas
+                var message = JsonSerializer.Serialize(eventWithType, options);
+                
+                _logger.LogInformation("Publicando evento: {EventType} com routing key: {RoutingKey}, conteúdo: {Message}", 
+                    @event.GetType().Name, routingKey, message);
+
                 var body = Encoding.UTF8.GetBytes(message);
 
                 // Publicar a mensagem
@@ -86,7 +154,6 @@ public class RabbitMqEventPublisher : IEventPublisher, IDisposable
             throw;
         }
     }
-
     public async Task PublishRangeAsync<T>(IEnumerable<T> events, CancellationToken cancellationToken = default) where T : IDomainEvent
     {
         if (_disposed)

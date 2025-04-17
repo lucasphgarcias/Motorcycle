@@ -12,6 +12,8 @@ using Motorcycle.Infrastructure.Data.Context;
 using Motorcycle.Infrastructure.Messaging.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Motorcycle.Infrastructure.Messaging.Consumers;
 
@@ -101,29 +103,132 @@ public class Motorcycle2024Consumer : BackgroundService
         }
     }
 
+    // protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    // {
+    //     stoppingToken.ThrowIfCancellationRequested();
+
+    //     var consumer = new AsyncEventingBasicConsumer(_channel);
+    //     // consumer.Received += async (_, ea) =>
+    //     {
+    //         try
+    //         {
+    //             var body = ea.Body.ToArray();
+    //             var message = Encoding.UTF8.GetString(body);
+
+    //             _logger.LogInformation("Mensagem recebida: {Message}", message);
+
+    //             // Deserializar a mensagem
+    //             var @event = JsonSerializer.Deserialize<MotorcycleCreatedEvent>(message);
+
+    //             if (@event != null)
+    //             {
+    //                 _logger.LogInformation("Evento deserializado: {EventType}, Ano: {Year}", @event.GetType().Name, @event.Year);
+    //                 // Verificar se a moto é do ano 2024
+    //                 if (@event.Year == 2024)
+    //                 {
+    //                     await ProcessMotorcycle2024EventAsync(@event);
+    //                     _logger.LogInformation("Notificação processada para moto do ano 2024, ID: {MotorcycleId}", @event.MotorcycleId);
+    //                 }
+    //             }
+
+    //             // Confirmar o processamento da mensagem
+    //             _channel.BasicAck(ea.DeliveryTag, false);
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             _logger.LogError(ex, "Erro ao processar mensagem: {ExceptionMessage}", ex.Message);
+                
+    //             // Em caso de erro, rejeitar a mensagem e mandá-la de volta para a fila para reprocessamento
+    //             _channel.BasicNack(ea.DeliveryTag, false, true);
+    //         }
+    //     };
+
+    //     consumer.Received += async (_, ea) =>
+    //     {
+    //         try
+    //         {
+    //             var body = ea.Body.ToArray();
+    //             var message = Encoding.UTF8.GetString(body);
+    //             _logger.LogInformation("Mensagem recebida: {Message}", message);
+
+    //             // Usar JsonSerializerOptions para garantir a deserialização correta
+    //             var options = new JsonSerializerOptions
+    //             {
+    //                 PropertyNameCaseInsensitive = true,
+    //                 Converters = { new JsonStringEnumConverter() }
+    //             };
+
+    //             // Deserializar o evento com as opções configuradas
+    //             var @event = JsonSerializer.Deserialize<MotorcycleCreatedEvent>(message, options);
+
+    //             _logger.LogInformation("Evento deserializado: {EventType}, Ano: {@Year}, Placa: {LicensePlate}", 
+    //                 @event.GetType().Name, @event.Year, @event.LicensePlate);
+
+    //             if (@event != null && @event.Year == 2024)
+    //             {
+    //                 await ProcessMotorcycle2024EventAsync(@event);
+    //                 _logger.LogInformation("Notificação processada para moto do ano 2024, ID: {MotorcycleId}", @event.MotorcycleId);
+    //             }
+    //             else
+    //             {
+    //                 _logger.LogInformation("Moto não é do ano 2024 (Ano: {@Year}), notificação ignorada", @event?.Year);
+    //             }
+
+    //             // Confirmar o processamento da mensagem
+    //             _channel.BasicAck(ea.DeliveryTag, false);
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             _logger.LogError(ex, "Erro ao processar mensagem de notificação de moto 2024");
+                
+    //             // Em caso de erro, rejeitar a mensagem e mandá-la de volta para a fila para reprocessamento
+    //             _channel.BasicNack(ea.DeliveryTag, false, true);
+    //         }
+    //     };
+    //     // // Iniciar o consumo da fila
+    //     // _channel.BasicConsume(
+    //     //     queue: _queueName,
+    //     //     autoAck: false, // Desativar auto-ack para garantir processamento adequado
+    //     //     consumer: consumer);
+
+    //     // return Task.CompletedTask;
+    // }
+
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         stoppingToken.ThrowIfCancellationRequested();
 
         var consumer = new AsyncEventingBasicConsumer(_channel);
+        
         consumer.Received += async (_, ea) =>
         {
             try
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
+                _logger.LogInformation("Mensagem recebida: {Message}", message);
 
-                // Deserializar a mensagem
-                var @event = JsonSerializer.Deserialize<MotorcycleCreatedEvent>(message);
-
-                if (@event != null)
+                // Usar JsonSerializerOptions para garantir a deserialização correta
+                var options = new JsonSerializerOptions
                 {
-                    // Verificar se a moto é do ano 2024
-                    if (@event.Year == 2024)
-                    {
-                        await ProcessMotorcycle2024EventAsync(@event);
-                        _logger.LogInformation("Notificação processada para moto do ano 2024, ID: {MotorcycleId}", @event.MotorcycleId);
-                    }
+                    PropertyNameCaseInsensitive = true,
+                    Converters = { new JsonStringEnumConverter() }
+                };
+
+                // Deserializar o evento com as opções configuradas
+                var @event = JsonSerializer.Deserialize<MotorcycleCreatedEvent>(message, options);
+
+                _logger.LogInformation("Evento deserializado: {EventType}, Ano: {@Year}, Placa: {LicensePlate}", 
+                    @event.GetType().Name, @event.Year, @event.LicensePlate);
+
+                if (@event != null && @event.Year == 2024)
+                {
+                    await ProcessMotorcycle2024EventAsync(@event);
+                    _logger.LogInformation("Notificação processada para moto do ano 2024, ID: {MotorcycleId}", @event.MotorcycleId);
+                }
+                else
+                {
+                    _logger.LogInformation("Moto não é do ano 2024 (Ano: {@Year}), notificação ignorada", @event?.Year);
                 }
 
                 // Confirmar o processamento da mensagem
@@ -146,7 +251,6 @@ public class Motorcycle2024Consumer : BackgroundService
 
         return Task.CompletedTask;
     }
-
     private async Task ProcessMotorcycle2024EventAsync(MotorcycleCreatedEvent @event)
     {
         // Usar um escopo para obter serviços scoped

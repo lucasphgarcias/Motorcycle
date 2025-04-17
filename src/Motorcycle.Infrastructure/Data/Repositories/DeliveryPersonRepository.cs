@@ -13,34 +13,46 @@ public class DeliveryPersonRepository : BaseRepository<DeliveryPersonEntity>, ID
 
     public async Task<DeliveryPersonEntity?> GetByCnpjAsync(string cnpj, CancellationToken cancellationToken = default)
     {
+        // return await _dbContext.DeliveryPersons
+        //     .FirstOrDefaultAsync(d => 
+        //         EF.Property<string>(d, "Cnpj") == cnpj, 
+        //         cancellationToken);
+
         return await _dbContext.DeliveryPersons
-            .FirstOrDefaultAsync(d => 
-                EF.Property<string>(d, "Cnpj") == cnpj, 
-                cancellationToken);
+            .FirstOrDefaultAsync(d => d.Cnpj.Value == cnpj, cancellationToken);
     }
 
     public async Task<DeliveryPersonEntity?> GetByDriverLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken = default)
     {
+        // return await _dbContext.DeliveryPersons
+        //     .FirstOrDefaultAsync(d => 
+        //         EF.Property<string>(d, "LicenseNumber") == licenseNumber, 
+        //         cancellationToken);
+
         return await _dbContext.DeliveryPersons
-            .FirstOrDefaultAsync(d => 
-                EF.Property<string>(d, "LicenseNumber") == licenseNumber, 
-                cancellationToken);
+        .FirstOrDefaultAsync(d => d.DriverLicense.Number == licenseNumber, cancellationToken);
     }
 
     public async Task<bool> ExistsByCnpjAsync(string cnpj, CancellationToken cancellationToken = default)
     {
+        // return await _dbContext.DeliveryPersons
+        //     .AnyAsync(d => 
+        //         EF.Property<string>(d, "Cnpj") == cnpj, 
+        //         cancellationToken);
+
         return await _dbContext.DeliveryPersons
-            .AnyAsync(d => 
-                EF.Property<string>(d, "Cnpj") == cnpj, 
-                cancellationToken);
+            .AnyAsync(d => d.Cnpj.Value == cnpj, cancellationToken);
     }
 
     public async Task<bool> ExistsByDriverLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken = default)
     {
+        // return await _dbContext.DeliveryPersons
+        //     .AnyAsync(d => 
+        //         EF.Property<string>(d, "LicenseNumber") == licenseNumber, 
+        //         cancellationToken);
+
         return await _dbContext.DeliveryPersons
-            .AnyAsync(d => 
-                EF.Property<string>(d, "LicenseNumber") == licenseNumber, 
-                cancellationToken);
+        .AnyAsync(d => d.DriverLicense.Number == licenseNumber, cancellationToken);
     }
 
     public override async Task<DeliveryPersonEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

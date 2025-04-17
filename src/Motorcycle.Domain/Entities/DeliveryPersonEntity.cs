@@ -12,7 +12,7 @@ public class DeliveryPersonEntity : Entity
     public List<RentalEntity> Rentals { get; private set; } = new();
 
     // Para EF Core
-    private DeliveryPersonEntity() : base() { }
+    public DeliveryPersonEntity() : base() { }
 
     private DeliveryPersonEntity(
         string name,

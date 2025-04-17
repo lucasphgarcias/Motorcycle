@@ -32,10 +32,9 @@ public class RentalRepository : BaseRepository<RentalEntity>, IRentalRepository
     public async Task<bool> ExistsActiveRentalForMotorcycleAsync(Guid motorcycleId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Rentals
-            .AnyAsync(r => 
-                r.MotorcycleId == motorcycleId && 
-                EF.Property<decimal?>(r, "TotalAmount") == null, 
-                cancellationToken);
+            .Where(r => r.MotorcycleId == motorcycleId)
+            .Where(r => r.TotalAmount == null)  // Assuming TotalAmount is a property on RentalEntity
+            .AnyAsync(cancellationToken);
     }
 
     public async Task<RentalEntity?> GetActiveRentalByDeliveryPersonIdAsync(Guid deliveryPersonId, CancellationToken cancellationToken = default)
@@ -43,12 +42,10 @@ public class RentalRepository : BaseRepository<RentalEntity>, IRentalRepository
         return await _dbContext.Rentals
             .Include(r => r.Motorcycle)
             .Include(r => r.DeliveryPerson)
-            .FirstOrDefaultAsync(r => 
-                r.DeliveryPersonId == deliveryPersonId && 
-                EF.Property<decimal?>(r, "TotalAmount") == null, 
-                cancellationToken);
+            .Where(r => r.DeliveryPersonId == deliveryPersonId)
+            .Where(r => r.TotalAmount == null)  // Assuming TotalAmount is a property on RentalEntity
+            .FirstOrDefaultAsync(cancellationToken);
     }
-
     public override async Task<RentalEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Rentals

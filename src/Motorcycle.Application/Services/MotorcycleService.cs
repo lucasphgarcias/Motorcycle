@@ -66,7 +66,7 @@ public class MotorcycleService : IMotorcycleService
             throw new DomainException(string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)));
         }
 
-        var motorcycle = _mapper.Map<MotorcycleEntity>(createDto);
+        var motorcycle = MotorcycleEntity.Create(createDto.Model, createDto.Year, createDto.LicensePlate);
         
         await _motorcycleRepository.AddAsync(motorcycle, cancellationToken);
         
