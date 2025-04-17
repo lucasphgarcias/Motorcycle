@@ -6,6 +6,7 @@ using Motorcycle.API.Middlewares;
 using Motorcycle.Application;
 using Motorcycle.Infrastructure;
 using Motorcycle.Infrastructure.Data.Migrations;
+using Motorcycle.API.Configurations;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +55,9 @@ builder.Services.AddSwaggerGen(c =>
     {
         c.IncludeXmlComments(xmlPath);
     }
+
+    // Add this document filter to control the order
+    c.DocumentFilter<SwaggerControllerOrderFilter>();
 });
 
 // Adicionar camadas
