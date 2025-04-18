@@ -78,7 +78,7 @@ public class AuthService : IAuthService
         
         // Hash password and create user
         var passwordHash = _passwordHasher.HashPassword(registerDto.Password);
-        var user = UserEntity.Create(registerDto.Username, registerDto.Email, passwordHash);
+        var user = UserEntity.Create(registerDto.Username, registerDto.Email, passwordHash, registerDto.Role);
         
         // Save user
         await _userRepository.AddAsync(user, cancellationToken);
