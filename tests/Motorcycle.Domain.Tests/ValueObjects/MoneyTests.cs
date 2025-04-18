@@ -251,4 +251,114 @@ public class MoneyTests
         result.Amount.Should().Be(100);
         result.Currency.Should().Be("BRL");
     }
+
+    [Fact]
+    public void Create_WithPositiveAmount_ShouldCreateMoney()
+    {
+        // Arrange & Act
+        var money = Money.Create(100m);
+
+        // Assert
+        money.Should().NotBeNull();
+        money.Amount.Should().Be(100m);
+    }
+
+    [Fact]
+    public void Create_WithZeroAmount_ShouldCreateMoney()
+    {
+        // Arrange & Act
+        var money = Money.Create(0m);
+
+        // Assert
+        money.Should().NotBeNull();
+        money.Amount.Should().Be(0m);
+    }
+
+    [Fact]
+    public void Add_TwoMoneyInstances_ShouldReturnSummedMoney()
+    {
+        // Arrange
+        var money1 = Money.Create(100m);
+        var money2 = Money.Create(50m);
+
+        // Act
+        var result = money1.Add(money2);
+
+        // Assert
+        result.Amount.Should().Be(150m);
+    }
+
+    [Fact]
+    public void Subtract_TwoMoneyInstances_ShouldReturnDifferenceMoney()
+    {
+        // Arrange
+        var money1 = Money.Create(100m);
+        var money2 = Money.Create(50m);
+
+        // Act
+        var result = money1.Subtract(money2);
+
+        // Assert
+        result.Amount.Should().Be(50m);
+    }
+
+    [Fact]
+    public void Multiply_ByPositiveScalar_ShouldReturnMultipliedMoney()
+    {
+        // Arrange
+        var money = Money.Create(100m);
+
+        // Act
+        var result = money.Multiply(2);
+
+        // Assert
+        result.Amount.Should().Be(200m);
+    }
+
+    [Fact]
+    public void Multiply_ByZeroScalar_ShouldReturnZeroMoney()
+    {
+        // Arrange
+        var money = Money.Create(100m);
+
+        // Act
+        var result = money.Multiply(0);
+
+        // Assert
+        result.Amount.Should().Be(0m);
+    }
+
+    [Fact]
+    public void Multiply_ByNegativeScalar_ShouldThrowDomainException()
+    {
+        // Arrange
+        var money = Money.Create(100m);
+
+        // Act & Assert
+        Assert.Throws<DomainException>(() => money.Multiply(-1));
+    }
+
+    [Fact]
+    public void Multiply_ByPositiveDecimal_ShouldReturnMultipliedMoney()
+    {
+        // Arrange
+        var money = Money.Create(100m);
+
+        // Act
+        var result = money.Multiply(0.5m);
+
+        // Assert
+        result.Amount.Should().Be(50m);
+    }
+
+    [Fact]
+    public void GetHashCode_WithSameAmount_ShouldReturnSameHashCode()
+    {
+        // Arrange
+        var money1 = Money.Create(100m);
+        var money2 = Money.Create(100m);
+
+        // Act & Assert
+        money1.GetHashCode().Should().Be(money2.GetHashCode());
+    }
 } 

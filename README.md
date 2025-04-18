@@ -76,7 +76,28 @@ O sistema é dividido em camadas claramente separadas, seguindo os princípios d
    docker-compose up -d
    ```
 
-3. Acesse a aplicação em `http://localhost:5000` ou `https://localhost:5001`.
+3. Acesse a aplicação em `http://localhost:5000/swagger/index.html` ou `https://localhost:5001/swagger/index.html`.
+
+4. Acessar o PgAdmin em `http://localhost:5050/browser/` 
+    ```
+      Use as credencias : 
+        (Configurar no PgAmdin com as informações do Postgres)
+          usuário: MotocycleDb 
+          Senha: MotocycleDb 
+          Nome do servidor (Docker) : Nome do container
+        (Acessar o PgAdmin)
+        E-mail: motorcycle@motorcycle.com
+        Senha: motorcycle@2025#
+    ```
+
+5. Acessar o MiniO em `http://localhost:9001/browser` 
+    ```
+      Use as credencias : 
+        usuário: minio 
+        Senha: minio 
+        
+    ```
+
 
 ## Documentação da API
 
@@ -425,9 +446,3 @@ Para contribuir com o projeto:
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para mais detalhes.
 
-## Contato
-
-Para mais informações ou suporte, entre em contato com a equipe de desenvolvimento:
-
-- Email: suporte@motorcycle.com
-- Website: https://motorcycle.com 

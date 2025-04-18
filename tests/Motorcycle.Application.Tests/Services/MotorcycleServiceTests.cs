@@ -180,6 +180,139 @@ public class MotorcycleServiceTests
         _mockRepository.Verify(r => r.RemoveAsync(motorcycle, It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Fact]
+    public async Task DeleteAsync_WithNonExistingId_ShouldReturnFalse()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        _mockRepository.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((MotorcycleEntity)null!);
+
+        // Act
+        var result = await _service.DeleteAsync(id);
+
+        // Assert
+        result.Should().BeFalse();
+        _mockRepository.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+        _mockRepository.Verify(r => r.RemoveAsync(It.IsAny<MotorcycleEntity>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WithMotorcycleHavingRentals_ShouldThrowDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var motorcycle = CreateSampleMotorcycle();
+        
+        // Simular que a moto tem aluguéis
+        _mockRepository.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(motorcycle);
+        
+        // Simular que a moto não pode ser removida
+        var motorcycleMock = new Mock<MotorcycleEntity>();
+        motorcycleMock.Setup(m => m.CanBeRemoved()).Returns(false);
+        _mockRepository.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(motorcycleMock.Object);
+
+        // Act & Assert
+        await _service.Invoking(s => s.DeleteAsync(id))
+            .Should().ThrowAsync<DomainException>()
+            .WithMessage("Não é possível remover uma moto que possui locações registradas.");
+    }
+
+    [Fact]
+    public async Task SearchByLicensePlateAsync_ShouldReturnMappedDtos()
+    {
+        // Arrange
+        var licensePlate = "ABC1234";
+        var motorcycles = new List<MotorcycleEntity> { CreateSampleMotorcycle(), CreateSampleMotorcycle() };
+        var dtos = new List<MotorcycleDto> { new MotorcycleDto(), new MotorcycleDto() };
+
+        _mockRepository.Setup(r => r.SearchByLicensePlateAsync(licensePlate, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(motorcycles);
+        _mockMapper.Setup(m => m.Map<IEnumerable<MotorcycleDto>>(motorcycles))
+            .Returns(dtos);
+
+        // Act
+        var result = await _service.SearchByLicensePlateAsync(licensePlate);
+
+        // Assert
+        result.Should().BeSameAs(dtos);
+        _mockRepository.Verify(r => r.SearchByLicensePlateAsync(licensePlate, It.IsAny<CancellationToken>()), Times.Once);
+        _mockMapper.Verify(m => m.Map<IEnumerable<MotorcycleDto>>(motorcycles), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateLicensePlateAsync_WithValidDto_ShouldUpdateAndReturnMotorcycle()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var updateDto = new UpdateMotorcycleLicensePlateDto { LicensePlate = "XYZ5678" };
+        var validationResult = new ValidationResult();
+        var motorcycle = CreateSampleMotorcycle();
+        var dto = new MotorcycleDto();
+
+        _mockUpdateValidator.Setup(v => v.ValidateAsync(updateDto, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+        _mockRepository.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(motorcycle);
+        _mockRepository.Setup(r => r.UpdateAsync(motorcycle, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        _mockMapper.Setup(m => m.Map<MotorcycleDto>(motorcycle))
+            .Returns(dto);
+
+        // Act
+        var result = await _service.UpdateLicensePlateAsync(id, updateDto);
+
+        // Assert
+        result.Should().BeSameAs(dto);
+        _mockUpdateValidator.Verify(v => v.ValidateAsync(updateDto, It.IsAny<CancellationToken>()), Times.Once);
+        _mockRepository.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+        _mockRepository.Verify(r => r.UpdateAsync(motorcycle, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateLicensePlateAsync_WithInvalidDto_ShouldThrowDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var updateDto = new UpdateMotorcycleLicensePlateDto { LicensePlate = "INVALID" };
+        var validationFailures = new List<ValidationFailure> 
+        {
+            new ValidationFailure("LicensePlate", "Formato de placa inválido")
+        };
+        var validationResult = new ValidationResult(validationFailures);
+
+        _mockUpdateValidator.Setup(v => v.ValidateAsync(updateDto, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        // Act & Assert
+        var action = () => _service.UpdateLicensePlateAsync(id, updateDto);
+        await action.Should().ThrowAsync<DomainException>();
+        
+        _mockUpdateValidator.Verify(v => v.ValidateAsync(updateDto, It.IsAny<CancellationToken>()), Times.Once);
+        _mockRepository.Verify(r => r.UpdateAsync(It.IsAny<MotorcycleEntity>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateLicensePlateAsync_WithNonExistingId_ShouldThrowDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var updateDto = new UpdateMotorcycleLicensePlateDto { LicensePlate = "XYZ5678" };
+        var validationResult = new ValidationResult();
+
+        _mockUpdateValidator.Setup(v => v.ValidateAsync(updateDto, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+        _mockRepository.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync((MotorcycleEntity)null!);
+
+        // Act & Assert
+        var action = () => _service.UpdateLicensePlateAsync(id, updateDto);
+        await action.Should().ThrowAsync<DomainException>()
+            .WithMessage($"Moto com ID {id} não encontrada.");
+    }
+
     private MotorcycleEntity CreateSampleMotorcycle()
     {
         return MotorcycleEntity.Create("Honda CG 160", 2023, "ABC1234");

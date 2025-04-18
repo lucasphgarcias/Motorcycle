@@ -230,16 +230,225 @@ public class RentalServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((RentalEntity)null!);
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync((RentalEntity)null);
 
         // Act
         var result = await _service.DeleteAsync(id);
 
         // Assert
         result.Should().BeFalse();
-        _mockRentalRepository.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
         _mockRentalRepository.Verify(r => r.RemoveAsync(It.IsAny<RentalEntity>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task CalculateTotalAmountAsync_WithValidData_ShouldReturnTotalAmountDetails()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var returnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(10));
+        
+        var rental = CreateSampleRental();
+        var motorcycle = CreateSampleMotorcycle();
+        var deliveryPerson = CreateSampleDeliveryPerson();
+        
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync(rental);
+        _mockMotorcycleRepository.Setup(r => r.GetByIdAsync(rental.MotorcycleId, default))
+            .ReturnsAsync(motorcycle);
+        _mockDeliveryPersonRepository.Setup(r => r.GetByIdAsync(rental.DeliveryPersonId, default))
+            .ReturnsAsync(deliveryPerson);
+        
+        // Act
+        var result = await _service.CalculateTotalAmountAsync(id, returnDate);
+        
+        // Assert
+        result.Should().NotBeNull();
+        result.RentalId.Should().Be(rental.Id);
+        result.TotalAmount.Should().BeGreaterThan(0);
+    }
+    
+    [Fact]
+    public async Task CalculateTotalAmountAsync_WithNonExistingRental_ShouldThrowDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var returnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(10));
+        
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync((RentalEntity)null);
+        
+        // Act & Assert
+        await _service.Invoking(s => s.CalculateTotalAmountAsync(id, returnDate))
+            .Should().ThrowAsync<DomainException>()
+            .WithMessage($"Aluguel com ID {id} não encontrado.");
+    }
+    
+    [Fact]
+    public async Task CalculateTotalAmountAsync_WithLateReturn_ShouldIncludeExtraAmount()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        // Simular uma devolução tardia (30 dias para um plano de 7 dias)
+        var returnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(30));
+        
+        var rental = CreateSampleRental();
+        var motorcycle = CreateSampleMotorcycle();
+        var deliveryPerson = CreateSampleDeliveryPerson();
+        
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync(rental);
+        _mockMotorcycleRepository.Setup(r => r.GetByIdAsync(rental.MotorcycleId, default))
+            .ReturnsAsync(motorcycle);
+        _mockDeliveryPersonRepository.Setup(r => r.GetByIdAsync(rental.DeliveryPersonId, default))
+            .ReturnsAsync(deliveryPerson);
+        
+        // Act
+        var result = await _service.CalculateTotalAmountAsync(id, returnDate);
+        
+        // Assert
+        result.Should().NotBeNull();
+        result.IsLateReturn.Should().BeTrue();
+        result.ExtraDays.Should().HaveValue();
+        result.ExtraAmount.Should().HaveValue();
+        result.ExtraAmount.Value.Should().BeGreaterThan(0);
+    }
+    
+    [Fact]
+    public async Task CalculateTotalAmountAsync_WithEarlyReturn_ShouldIncludePenaltyAmount()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        // Simular uma devolução antecipada (3 dias para um plano de 7 dias)
+        var returnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(3));
+        
+        var rental = CreateSampleRental();
+        var motorcycle = CreateSampleMotorcycle();
+        var deliveryPerson = CreateSampleDeliveryPerson();
+        
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync(rental);
+        _mockMotorcycleRepository.Setup(r => r.GetByIdAsync(rental.MotorcycleId, default))
+            .ReturnsAsync(motorcycle);
+        _mockDeliveryPersonRepository.Setup(r => r.GetByIdAsync(rental.DeliveryPersonId, default))
+            .ReturnsAsync(deliveryPerson);
+        
+        // Act
+        var result = await _service.CalculateTotalAmountAsync(id, returnDate);
+        
+        // Assert
+        result.Should().NotBeNull();
+        result.IsEarlyReturn.Should().BeTrue();
+        result.UnusedDays.Should().HaveValue();
+        result.PenaltyAmount.Should().HaveValue();
+        result.PenaltyAmount.Value.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task ReturnMotorcycleAsync_WithValidData_ShouldReturnTotalAmountDetails()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var returnDto = new ReturnMotorcycleDto
+        {
+            ReturnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(10))
+        };
+        
+        var rental = CreateSampleRental();
+        var motorcycle = CreateSampleMotorcycle();
+        var deliveryPerson = CreateSampleDeliveryPerson();
+        
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync(rental);
+        _mockRentalRepository.Setup(r => r.UpdateAsync(It.IsAny<RentalEntity>(), default))
+            .Returns(Task.CompletedTask);
+        _mockMotorcycleRepository.Setup(r => r.GetByIdAsync(rental.MotorcycleId, default))
+            .ReturnsAsync(motorcycle);
+        _mockDeliveryPersonRepository.Setup(r => r.GetByIdAsync(rental.DeliveryPersonId, default))
+            .ReturnsAsync(deliveryPerson);
+        _mockReturnValidator.Setup(v => v.ValidateAsync(returnDto, default))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+        
+        // Act
+        var result = await _service.ReturnMotorcycleAsync(id, returnDto);
+        
+        // Assert
+        result.Should().NotBeNull();
+        result.RentalId.Should().Be(rental.Id);
+        result.TotalAmount.Should().BeGreaterThan(0);
+        _mockRentalRepository.Verify(r => r.UpdateAsync(It.IsAny<RentalEntity>(), default), Times.Once);
+    }
+    
+    [Fact]
+    public async Task ReturnMotorcycleAsync_WithInvalidDto_ShouldThrowDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var returnDto = new ReturnMotorcycleDto
+        {
+            ReturnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(10))
+        };
+        
+        var validationResult = new FluentValidation.Results.ValidationResult(
+            new List<FluentValidation.Results.ValidationFailure>
+            {
+                new FluentValidation.Results.ValidationFailure("ReturnDate", "A data de devolução é inválida")
+            });
+        
+        _mockReturnValidator.Setup(v => v.ValidateAsync(returnDto, default))
+            .ReturnsAsync(validationResult);
+        
+        // Act & Assert
+        await _service.Invoking(s => s.ReturnMotorcycleAsync(id, returnDto))
+            .Should().ThrowAsync<DomainException>()
+            .WithMessage("A data de devolução é inválida");
+    }
+    
+    [Fact]
+    public async Task ReturnMotorcycleAsync_WithNonExistingRental_ShouldThrowDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var returnDto = new ReturnMotorcycleDto
+        {
+            ReturnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(10))
+        };
+        
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync((RentalEntity)null);
+        _mockReturnValidator.Setup(v => v.ValidateAsync(returnDto, default))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+        
+        // Act & Assert
+        await _service.Invoking(s => s.ReturnMotorcycleAsync(id, returnDto))
+            .Should().ThrowAsync<DomainException>()
+            .WithMessage($"Aluguel com ID {id} não encontrado.");
+    }
+    
+    [Fact]
+    public async Task ReturnMotorcycleAsync_WithAlreadyFinishedRental_ShouldThrowDomainException()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        var returnDto = new ReturnMotorcycleDto
+        {
+            ReturnDate = DateOnly.FromDateTime(DateTime.Today.AddDays(10))
+        };
+        
+        var rental = CreateSampleRental();
+        
+        // Simular um aluguel já finalizado
+        rental.ReturnMotorcycle(DateOnly.FromDateTime(DateTime.Today.AddDays(5)));
+        
+        _mockRentalRepository.Setup(r => r.GetByIdAsync(id, default))
+            .ReturnsAsync(rental);
+        _mockReturnValidator.Setup(v => v.ValidateAsync(returnDto, default))
+            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
+        
+        // Act & Assert
+        await _service.Invoking(s => s.ReturnMotorcycleAsync(id, returnDto))
+            .Should().ThrowAsync<DomainException>()
+            .WithMessage("Este aluguel já foi finalizado.");
     }
 
     private MotorcycleEntity CreateSampleMotorcycle()

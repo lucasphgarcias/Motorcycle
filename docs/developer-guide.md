@@ -344,7 +344,111 @@ public class MotorcycleServiceTests
         _mockRepository.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
     }
 }
+
+### Cobertura de Testes
+
+O projeto atualmente tem a seguinte cobertura de testes unitários:
+
+**Estatísticas de Cobertura (Última atualização: 05/05/2025)**
+
+| Camada           | Cobertura de Linhas    | Cobertura de Branches   |
+|------------------|-----------------------|------------------------|
+| Domain           | 10.2% (55/543)        | 6.2% (11/178)          |
+| Application      | 17.4% (118/675)       | 0.9% (1/110)           |
+| **Total**        | **14.2% (173/1218)**  | **4.2% (12/288)**       |
+
+
+#### Avaliação por Componente
+
+- **Validadores**: Excelente cobertura para validadores como `CreateMotorcycleValidator` (100%), `UpdateMotorcycleDtoValidator` (100%) e `ReturnMotorcycleDtoValidator` (100%).
+- **DTOs**: Boa cobertura para DTOs como `CreateMotorcycleDto`, `UpdateMotorcycleDto`, `ReturnMotorcycleDto` (todos com 100%).
+- **Value Objects**: Cobertura melhorada para value objects do domínio:
+  - `Money`: Implementados testes para criação, comparação e operações básicas.
+  - `RentalPeriod`: Implementados testes para criação, datas de início/fim e cálculos de períodos.
+  - `LicensePlate`: Testes completos para validação e formatação.
+  - `DriverLicense`: Pendente de implementação completa de testes.
+- **Serviços**: Cobertura parcial para:
+  - `RentalService`: Testes para criação, recuperação e gerenciamento de aluguéis.
+  - `MotorcycleService`: Testes básicos implementados.
+  - `DeliveryPersonService`: Testes básicos implementados.
+- **Entidades**: Implementados testes iniciais para `RentalEntity` e algumas funções-chave.
+
+#### Metas de Cobertura
+
+- Curto prazo: Atingir 30% de cobertura geral.
+- Médio prazo: Atingir 50% nas camadas Domain e Application.
+- Longo prazo: Atingir 70% de cobertura geral, incluindo testes de API.
+
+#### Monitoramento de Cobertura
+
+A cobertura de testes é monitorada através da ferramenta Coverlet, integrada ao processo de build. Para gerar relatórios de cobertura localmente, execute:
+
+```bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 ```
+
+Para gerar um relatório HTML detalhado:
+
+```bash
+reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
+```
+
+O relatório gerado pode ser visualizado abrindo o arquivo `coveragereport\index.html` em qualquer navegador.
+
+Em sistemas Windows, se o comando de múltiplas etapas falhar com o operador '&&', execute os comandos separadamente:
+
+```bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html
+```
+
+Para verificar rapidamente as percentagens de cobertura no relatório HTML:
+
+```bash
+findstr /s "title=" coveragereport\index.html | findstr "%"
+```
+
+#### Estratégias para Aumentar a Cobertura
+
+1. **Priorização por Complexidade**: Focar primeiro em testar componentes com lógica de negócios complexa.
+2. **Testes de Integração**: Implementar testes que verifiquem a interação entre componentes.
+3. **Mocking de Dependências**: Utilizar Moq para simular dependências externas.
+4. **Value Objects e Entidades**: Aumentar a cobertura de testes para todos os value objects e entidades do domínio.
+5. **Serviços de Aplicação**: Implementar testes abrangentes para todos os métodos dos serviços.
+6. **Controllers**: Adicionar testes para os controllers da API, verificando respostas e status codes.
+
+#### Classes Prioritárias para Testes
+
+- **Domain Layer**:
+  - `RentalEntity`: Lógica de negócios para gestão de aluguéis.
+  - `MotorcycleEntity`: Validação e comportamentos de motocicletas.
+  - Value Objects pendentes: `DriverLicense`, `Cnpj`
+
+- **Application Layer**:
+  - `RentalService`: Completar testes para processamento de aluguéis e cálculos.
+  - `MotorcycleService`: Expandir testes para gerenciamento de motocicletas.
+  - `DeliveryPersonService`: Expandir testes para gerenciamento de entregadores.
+
+- **API Layer**:
+  - `MotorcyclesController`: Implementar testes para todas as actions.
+  - `RentalsController`: Implementar testes para todas as actions.
+  - `DeliveryPersonsController`: Implementar testes para todas as actions.
+
+#### Boas Práticas de Teste
+
+1. **Nomenclatura Descritiva**: Use nomes que descrevam claramente o comportamento esperado.
+   - Exemplo: `Should_ReturnError_When_PlateNumberIsInvalid`
+
+2. **Padrão AAA (Arrange-Act-Assert)**:
+   - Arrange: Configure as pré-condições e entradas para o teste.
+   - Act: Execute o código que está sendo testado.
+   - Assert: Verifique se o resultado é o esperado.
+
+3. **Isolamento**: Cada teste deve ser independente e não depender do estado de outros testes.
+
+4. **Teste Apenas Uma Coisa**: Cada método de teste deve verificar apenas um comportamento específico.
+
+5. **Use Mock para Dependências Externas**: Isole o código de teste de dependências externas usando mocks.
 
 ## Documentação de Código
 

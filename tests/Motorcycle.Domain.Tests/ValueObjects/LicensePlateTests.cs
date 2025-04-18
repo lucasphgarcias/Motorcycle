@@ -72,6 +72,27 @@ public class LicensePlateTests
     }
 
     [Fact]
+    public void Equals_WithNull_ShouldReturnFalse()
+    {
+        // Arrange
+        var licensePlate = LicensePlate.Create("ABC1234");
+
+        // Act & Assert
+        licensePlate.Equals(null).Should().BeFalse();
+    }
+    
+    [Fact]
+    public void GetHashCode_WithSameLicensePlate_ShouldReturnSameHashCode()
+    {
+        // Arrange
+        var licensePlate1 = LicensePlate.Create("ABC1234");
+        var licensePlate2 = LicensePlate.Create("ABC1234");
+
+        // Act & Assert
+        licensePlate1.GetHashCode().Should().Be(licensePlate2.GetHashCode());
+    }
+
+    [Fact]
     public void ToString_ShouldReturnValue()
     {
         // Arrange
@@ -83,5 +104,39 @@ public class LicensePlateTests
 
         // Assert
         result.Should().Be(licensePlateValue);
+    }
+
+    [Fact]
+    public void OperatorEqual_WithNullReferences_ShouldReturnTrue()
+    {
+        // Arrange
+        LicensePlate? licensePlate1 = null;
+        LicensePlate? licensePlate2 = null;
+
+        // Act & Assert
+        (licensePlate1 == licensePlate2).Should().BeTrue();
+    }
+
+    [Fact]
+    public void OperatorEqual_WithOneNullReference_ShouldReturnFalse()
+    {
+        // Arrange
+        var licensePlate1 = LicensePlate.Create("ABC1234");
+        LicensePlate? licensePlate2 = null;
+
+        // Act & Assert
+        (licensePlate1 == licensePlate2).Should().BeFalse();
+        (licensePlate2 == licensePlate1).Should().BeFalse();
+    }
+
+    [Fact]
+    public void OperatorNotEqual_WithDifferentInstances_ShouldReturnTrue()
+    {
+        // Arrange
+        var licensePlate1 = LicensePlate.Create("ABC1234");
+        var licensePlate2 = LicensePlate.Create("XYZ9876");
+
+        // Act & Assert
+        (licensePlate1 != licensePlate2).Should().BeTrue();
     }
 } 
