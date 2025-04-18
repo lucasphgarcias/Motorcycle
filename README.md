@@ -94,7 +94,7 @@ O sistema é dividido em camadas claramente separadas, seguindo os princípios d
     ```
       Use as credencias : 
         usuário: minio 
-        Senha: minio 
+        Senha: minio@2025# 
         
     ```
 
