@@ -14,3 +14,5 @@ C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\Motorcycle.Application.pdb
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\ref\Motorcycle.Application.dll
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\Motorcycle.Application.sourcelink.json
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\bin\Debug\net8.0\Motorcycle.Application.xml
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\Motorcycle.Application.xml

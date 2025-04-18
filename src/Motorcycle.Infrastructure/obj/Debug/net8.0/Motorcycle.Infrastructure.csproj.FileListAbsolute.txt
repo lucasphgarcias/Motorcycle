@@ -16,3 +16,4 @@ C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Infrastructu
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Infrastructure\obj\Debug\net8.0\Motorcycle.Infrastructure.pdb
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Infrastructure\obj\Debug\net8.0\ref\Motorcycle.Infrastructure.dll
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Infrastructure\obj\Debug\net8.0\Motorcycle.Infrastructure.sourcelink.json
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Infrastructure\bin\Debug\net8.0\Motorcycle.Application.xml

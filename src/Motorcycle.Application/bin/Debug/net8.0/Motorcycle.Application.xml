@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Motorcycle.Application</name>
+    </assembly>
+    <members>
+        <member name="P:Motorcycle.Application.DTOs.Auth.RegisterDto.Role">
+            <summary>
+            Função do usuário: 0(User) ou 1(Admin)
+            </summary>
+        </member>
+    </members>
+</doc>
