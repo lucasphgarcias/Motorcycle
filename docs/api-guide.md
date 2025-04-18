@@ -9,13 +9,7 @@ A API fornece endpoints para gerenciar motocicletas, entregadores, aluguéis e a
 ## Base URL
 
 ```
-https://api.motorcyclerental.com/api/v1
-```
-
-Para ambiente de desenvolvimento:
-
-```
-https://localhost:5001/api/v1
+http://localhost:5000/swagger/index.html
 ```
 
 ## Autenticação
@@ -32,7 +26,7 @@ POST /auth/login
 
 ```json
 {
-  "email": "admin@example.com",
+  "name": "admin@example.com",
   "password": "senha123"
 }
 ```
