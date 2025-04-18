@@ -1,4 +1,5 @@
 using Motorcycle.Domain.Enums;
+using System;
 
 namespace Motorcycle.Application.DTOs.DeliveryPerson{
 
@@ -6,7 +7,7 @@ namespace Motorcycle.Application.DTOs.DeliveryPerson{
     {
         public string Name { get; set; } = string.Empty;
         public string Cnpj { get; set; } = string.Empty;
-        public DateOnly BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public string LicenseNumber { get; set; } = string.Empty;
         public LicenseType LicenseType { get; set; }
     }

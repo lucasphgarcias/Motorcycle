@@ -66,35 +66,35 @@ public class DeliveryPersonService : IDeliveryPersonService
     }
 
     public async Task<DeliveryPersonDto> CreateAsync(CreateDeliveryPersonDto createDto, CancellationToken cancellationToken = default)
-{
-    try
     {
-        _logger.LogInformation("Creating new delivery person with CNPJ: {Cnpj}", createDto?.Cnpj);
-        
-        if (createDto == null)
-            throw new ArgumentNullException(nameof(createDto), "Os dados do entregador são obrigatórios.");
-        
-        if (_createValidator == null)
-            throw new InvalidOperationException("O validador não foi inicializado corretamente.");
-            
-        var validationResult = await _createValidator.ValidateAsync(createDto, cancellationToken);
-        if (!validationResult.IsValid)
+        try
         {
-            throw new DomainException(string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)));
-        }
+            _logger.LogInformation("Creating new delivery person with CNPJ: {Cnpj}", createDto?.Cnpj);
+            
+            if (createDto == null)
+                throw new ArgumentNullException(nameof(createDto), "Os dados do entregador são obrigatórios.");
+            
+            if (_createValidator == null)
+                throw new InvalidOperationException("O validador não foi inicializado corretamente.");
+            
+            var validationResult = await _createValidator.ValidateAsync(createDto, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                throw new DomainException(string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)));
+            }
 
-        var deliveryPerson = _mapper.Map<DeliveryPersonEntity>(createDto);
-        
-        await _deliveryPersonRepository.AddAsync(deliveryPerson, cancellationToken);
-        
-        return _mapper.Map<DeliveryPersonDto>(deliveryPerson);
+            var deliveryPerson = _mapper.Map<DeliveryPersonEntity>(createDto);
+            
+            await _deliveryPersonRepository.AddAsync(deliveryPerson, cancellationToken);
+            
+            return _mapper.Map<DeliveryPersonDto>(deliveryPerson);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao criar entregador: {ErrorMessage}", ex.Message);
+            throw;
+        }
     }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Erro ao criar entregador: {ErrorMessage}", ex.Message);
-        throw;
-    }
-}
 
     public async Task<DeliveryPersonDto> UpdateAsync(Guid id, CreateDeliveryPersonDto updateDto, CancellationToken cancellationToken = default)
     {
@@ -111,12 +111,7 @@ public class DeliveryPersonService : IDeliveryPersonService
         }
 
         // Criar uma nova entidade com os novos valores
-        var updatedDeliveryPerson = DeliveryPersonEntity.Create(
-            updateDto.Name,
-            updateDto.Cnpj,
-            updateDto.BirthDate,
-            updateDto.LicenseNumber,
-            updateDto.LicenseType);
+        var updatedDeliveryPerson = _mapper.Map<DeliveryPersonEntity>(updateDto);
         
         // Manter o ID original
         var reflection = typeof(Entity).GetProperty("Id");

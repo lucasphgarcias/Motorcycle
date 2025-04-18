@@ -4,6 +4,7 @@ using Motorcycle.Application.DTOs.Motorcycle;
 using Motorcycle.Application.DTOs.Rental;
 using Motorcycle.Domain.Entities;
 using Motorcycle.Domain.Enums;
+using System;
 
 namespace Motorcycle.Application.Mappings;
 
@@ -11,6 +12,14 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        // Configuração de mapeamento global para DateTime -> DateOnly
+        CreateMap<DateTime, DateOnly>()
+            .ConvertUsing(src => DateOnly.FromDateTime(src));
+            
+        // Configuração de mapeamento global para DateOnly -> DateTime
+        CreateMap<DateOnly, DateTime>()
+            .ConvertUsing(src => DateTime.SpecifyKind(new DateTime(src.Year, src.Month, src.Day), DateTimeKind.Utc));
+
         // Motorcycle mappings
         CreateMap<MotorcycleEntity, MotorcycleDto>()
             .ForMember(dest => dest.LicensePlate, opt => opt.MapFrom(src => src.LicensePlate.Value));
@@ -29,7 +38,7 @@ public class MappingProfile : Profile
             .ConstructUsing(src => DeliveryPersonEntity.Create(
                 src.Name, 
                 src.Cnpj, 
-                src.BirthDate, 
+                DateOnly.FromDateTime(src.BirthDate), 
                 src.LicenseNumber, 
                 src.LicenseType));
 

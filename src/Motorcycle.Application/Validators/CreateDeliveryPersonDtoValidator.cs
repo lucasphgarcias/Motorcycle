@@ -1,6 +1,7 @@
 using FluentValidation;
 using Motorcycle.Application.DTOs.DeliveryPerson;
 using Motorcycle.Domain.Interfaces.Repositories;
+using System;
 
 namespace Motorcycle.Application.Validators;
 
@@ -44,9 +45,9 @@ public class CreateDeliveryPersonDtoValidator : AbstractValidator<CreateDelivery
         return !await _deliveryPersonRepository.ExistsByDriverLicenseNumberAsync(licenseNumber, cancellationToken);
     }
 
-    private bool BeAtLeast18YearsOld(DateOnly birthDate)
+    private bool BeAtLeast18YearsOld(DateTime birthDate)
     {
-        var today = DateOnly.FromDateTime(DateTime.Today);
+        var today = DateTime.Today;
         var age = today.Year - birthDate.Year;
 
         if (birthDate.AddYears(age) > today)
