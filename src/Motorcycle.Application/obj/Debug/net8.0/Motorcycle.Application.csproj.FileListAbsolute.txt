@@ -13,3 +13,4 @@ C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\refint\Motorcycle.Application.dll
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\Motorcycle.Application.pdb
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\ref\Motorcycle.Application.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Debug\net8.0\Motorcycle.Application.sourcelink.json

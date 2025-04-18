@@ -135,3 +135,13 @@ C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\obj\Debu
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\obj\Debug\net8.0\Motorcycle.API.pdb
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\obj\Debug\net8.0\Motorcycle.API.genruntimeconfig.cache
 C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\obj\Debug\net8.0\ref\Motorcycle.API.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.Bcl.Memory.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.API\obj\Debug\net8.0\Motorcycle.API.sourcelink.json

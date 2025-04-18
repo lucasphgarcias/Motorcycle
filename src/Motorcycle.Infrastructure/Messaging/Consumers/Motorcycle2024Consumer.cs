@@ -1,5 +1,4 @@
 using System.Text;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Motorcycle.Domain.Entities;
 using Motorcycle.Infrastructure.Data.Entities;
@@ -20,8 +19,8 @@ namespace Motorcycle.Infrastructure.Messaging.Consumers;
 public class Motorcycle2024Consumer : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly IConnection _connection;
-    private readonly IModel _channel;
+    private readonly IConnection? _connection;
+    private readonly IModel? _channel;
     private readonly ILogger<Motorcycle2024Consumer> _logger;
     private readonly string _exchangeName = "motorcycle.events";
     private readonly string _queueName = "motorcycle.2024.notifications";

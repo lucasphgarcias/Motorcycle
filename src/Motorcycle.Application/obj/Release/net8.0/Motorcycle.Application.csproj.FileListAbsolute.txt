@@ -1,0 +1,16 @@
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\bin\Release\net8.0\Motorcycle.Application.deps.json
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\bin\Release\net8.0\Motorcycle.Application.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\bin\Release\net8.0\Motorcycle.Application.pdb
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\bin\Release\net8.0\Motorcycle.Domain.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\bin\Release\net8.0\Motorcycle.Domain.pdb
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.csproj.AssemblyReference.cache
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.AssemblyInfoInputs.cache
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.AssemblyInfo.cs
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.csproj.CoreCompileInputs.cache
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.sourcelink.json
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcyc.6E52A618.Up2Date
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\refint\Motorcycle.Application.dll
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\Motorcycle.Application.pdb
+C:\Users\lucas\OneDrive\Área de Trabalho\Motorcycle\src\Motorcycle.Application\obj\Release\net8.0\ref\Motorcycle.Application.dll

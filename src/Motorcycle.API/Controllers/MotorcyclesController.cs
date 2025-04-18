@@ -3,12 +3,13 @@ using Motorcycle.API.Models.Responses;
 using Motorcycle.Application.DTOs.Motorcycle;
 using Motorcycle.Application.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
-
+using Microsoft.AspNetCore.Authorization;
 namespace Motorcycle.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
+[Authorize]
 public class MotorcyclesController : ControllerBase
 {
     private readonly IMotorcycleService _motorcycleService;
@@ -78,6 +79,7 @@ public class MotorcyclesController : ControllerBase
     /// <param name="createDto">Dados da moto</param>
     /// <returns>Moto cadastrada</returns>
     [HttpPost]
+    [Authorize(Roles = "Admin")] // Restrict to admin role
     [SwaggerResponse(201, "Moto criada com sucesso", typeof(ApiResponse<MotorcycleDto>))]
     [SwaggerResponse(400, "Dados inválidos", typeof(ApiResponse))]
     public async Task<IActionResult> Create([FromBody] CreateMotorcycleDto createDto)

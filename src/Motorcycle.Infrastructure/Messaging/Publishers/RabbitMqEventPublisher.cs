@@ -6,15 +6,14 @@ using Motorcycle.Domain.Events;
 using Motorcycle.Domain.Interfaces.Services;
 using Motorcycle.Infrastructure.Messaging.Configuration;
 using RabbitMQ.Client;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Motorcycle.Infrastructure.Messaging.Publishers;
 
 public class RabbitMqEventPublisher : IEventPublisher, IDisposable
 {
-    private readonly IConnection _connection;
-    private readonly IModel _channel;
+    private readonly IConnection? _connection;
+    private readonly IModel? _channel;
     private readonly ILogger<RabbitMqEventPublisher> _logger;
     private readonly string _exchangeName = "motorcycle.events";
     private bool _disposed;
@@ -138,6 +137,8 @@ public class RabbitMqEventPublisher : IEventPublisher, IDisposable
 
                 var body = Encoding.UTF8.GetBytes(message);
 
+                if (_channel == null)
+                    throw new InvalidOperationException("Canal RabbitMQ não está inicializado.");
                 // Publicar a mensagem
                 _channel.BasicPublish(
                     exchange: _exchangeName,

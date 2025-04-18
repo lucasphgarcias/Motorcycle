@@ -4,6 +4,20 @@
         <name>Motorcycle.API</name>
     </assembly>
     <members>
+        <member name="M:Motorcycle.API.Controllers.AuthController.Login(Motorcycle.Application.DTOs.Auth.LoginDto)">
+            <summary>
+            Realiza login de usuário
+            </summary>
+            <param name="loginDto">Credenciais de login</param>
+            <returns>Token de autenticação</returns>
+        </member>
+        <member name="M:Motorcycle.API.Controllers.AuthController.Register(Motorcycle.Application.DTOs.Auth.RegisterDto)">
+            <summary>
+            Registra um novo usuário
+            </summary>
+            <param name="registerDto">Dados do usuário</param>
+            <returns>Token de autenticação</returns>
+        </member>
         <member name="M:Motorcycle.API.Controllers.DeliveryPersonsController.GetAll">
             <summary>
             Obtém todos os entregadores cadastrados

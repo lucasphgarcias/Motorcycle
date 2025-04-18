@@ -1,3 +1,10 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Motorcycle.Application.Interfaces;
+using Motorcycle.Application.Services;
+using Motorcycle.Infrastructure.Auth.Configuration;
+using Motorcycle.Infrastructure.Auth.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +45,15 @@ public static class DependencyInjection
         services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
         services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
         services.AddHostedService<Motorcycle2024Consumer>();
+
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+        
+        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        
+        
 
         return services;
     }
