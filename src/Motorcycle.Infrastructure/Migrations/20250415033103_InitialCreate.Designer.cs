@@ -117,6 +117,39 @@ namespace Motorcycle.Infrastructure.Migrations
                     b.ToTable("Motorcycle2024Notifications", (string)null);
                 });
 
+            modelBuilder.Entity("Motorcycle.Infrastructure.Data.Entities.MotorcycleNotification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LicensePlate")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("MotorcycleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("NotificationTimestamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MotorcycleNotifications", (string)null);
+                });
+
             modelBuilder.Entity("Motorcycle.Domain.Entities.DeliveryPersonEntity", b =>
                 {
                     b.OwnsOne("Motorcycle.Domain.ValueObjects.Cnpj", "Cnpj", b1 =>

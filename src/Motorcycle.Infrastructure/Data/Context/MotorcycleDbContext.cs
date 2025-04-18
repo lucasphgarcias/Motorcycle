@@ -11,6 +11,7 @@ public class MotorcycleDbContext : DbContext
     public DbSet<DeliveryPersonEntity> DeliveryPersons { get; set; } = null!;
     public DbSet<RentalEntity> Rentals { get; set; } = null!;
     public DbSet<Motorcycle2024Notification> Motorcycle2024Notifications { get; set; } = null!;
+    public DbSet<MotorcycleNotification> MotorcycleNotifications { get; set; } = null!;
 
     public MotorcycleDbContext(DbContextOptions<MotorcycleDbContext> options)
         : base(options)
@@ -27,5 +28,6 @@ public class MotorcycleDbContext : DbContext
         modelBuilder.ApplyConfiguration(new DeliveryPersonConfiguration());
         modelBuilder.ApplyConfiguration(new RentalConfiguration());
         modelBuilder.ApplyConfiguration(new Motorcycle2024NotificationConfiguration());
+        modelBuilder.ApplyConfiguration(new MotorcycleNotificationConfiguration());
     }
 }

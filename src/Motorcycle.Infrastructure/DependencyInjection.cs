@@ -45,6 +45,7 @@ public static class DependencyInjection
         services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
         services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
         services.AddHostedService<Motorcycle2024Consumer>();
+        services.AddHostedService<MotorcycleCreatedConsumer>();
 
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         

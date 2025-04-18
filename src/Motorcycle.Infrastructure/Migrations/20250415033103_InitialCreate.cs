@@ -45,6 +45,23 @@ namespace Motorcycle.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MotorcycleNotifications",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MotorcycleId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LicensePlate = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    Model = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Year = table.Column<int>(type: "integer", nullable: false),
+                    NotificationTimestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MotorcycleNotifications", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Motorcycles",
                 columns: table => new
                 {
@@ -154,6 +171,9 @@ namespace Motorcycle.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Motorcycle2024Notifications");
+
+            migrationBuilder.DropTable(
+                name: "MotorcycleNotifications");
 
             migrationBuilder.DropTable(
                 name: "Rentals");
